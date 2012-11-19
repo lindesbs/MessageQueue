@@ -21,7 +21,6 @@ class MessageQueueCron extends Frontend
 	 */
 	public function run()
 	{
-		$bIsDebug = true;
 		
 		$this -> import("Database");
 
@@ -121,25 +120,16 @@ class MessageQueueCron extends Frontend
 						$objClass -> exceptionHandler(deserialize($objResult['objData']), $objResult, $e -> getMessage(), 'finishedAllJobs');
 					}
 
-					if (!$bIsDebug)
-					{
-						$objCleanFinishedJobs = $this -> Database -> prepare("DELETE FROM `tl_messagequeue` WHERE objGroup=?") -> executeUncached($keyGroup);
-					}
-					else 
-					{
-						$objCleanFinishedJobs = $this -> Database -> prepare("DELETE FROM `tl_messagequeue` WHERE objGroup=?") -> executeUncached($keyGroup);
-					}
+					
+
+					$objCleanFinishedJobs = $this -> Database -> prepare("DELETE FROM `tl_messagequeue` WHERE objGroup=?") -> executeUncached($keyGroup);
 
 				}
 			}
 
 		}
 		
-		if ($bIsDebug)
-		{
-			$objCleanFinishedJobs = $this -> Database -> prepare("UPDATE `tl_messagequeue` SET status=?") -> executeUncached(MESSAGEJOB_NEW);
-			$this -> Database -> prepare("TRUNCATE TABLE tl_events_reminder_showlog") -> executeUncached();
-		}
+		
 				
 					
 	}
